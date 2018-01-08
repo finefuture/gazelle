@@ -93,11 +93,11 @@ public class ShopService extends MagicService{
         where.init()
                 .checkNullValue()//默认两个过滤条件（checkNullValue和checkEmptyValue）
                 .addChecker("methodName", Checker.class)//植入where条件过滤
-				.and()
+		.and()
                 .eq("auditStatus", auditStatus)
                 .eq("shopName", shopName)
-				.or()
-				.like("id", "%BC85")
+		.or()
+		.like("id", "%BC85")
                 .asc("createTime", "updateTime")
                 .desc("del","logo")
                 .first(first)
