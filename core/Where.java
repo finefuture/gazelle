@@ -97,6 +97,16 @@ public class Where extends AbstractExpressionParser {
         toAsc(field);
         return this;
     }
+    
+    public Where asc (Expression... exps){
+        toAsc(exps);
+        return this;
+    }
+
+    public Where asc (ArrayList<Expression> exps){
+        toAsc(exps.toArray(new Expression[exps.size()]));
+        return this;
+    }
 
     public Where desc (String... field) {
         toDesc(Arrays.asList(field));
@@ -105,6 +115,16 @@ public class Where extends AbstractExpressionParser {
 
     public Where desc (List<String> field) {
         toDesc(field);
+        return this;
+    }
+    
+    public Where desc (Expression... exps){
+        toDesc(exps);
+        return this;
+    }
+
+    public Where desc (ArrayList<Expression> exps){
+        toDesc(exps.toArray(new Expression[exps.size()]));
         return this;
     }
 
@@ -119,6 +139,15 @@ public class Where extends AbstractExpressionParser {
             whereStructure.addOrder(asc);
             if (aggregated)
                 whereStructure.addGroupBy(path);
+        }
+    }
+    
+    private void toAsc (Expression... exps) {
+        WhereStructure whereStructure = this.whereStructure.get();
+        CriteriaBuilder cb = jpa.cb();
+        for (Expression exp:exps) {
+            Order asc = cb.asc(exp);
+            whereStructure.addOrder(asc);
         }
     }
 
@@ -136,6 +165,15 @@ public class Where extends AbstractExpressionParser {
         }
     }
 
+    private void toDesc (Expression... exps) {
+        WhereStructure whereStructure = this.whereStructure.get();
+        CriteriaBuilder cb = jpa.cb();
+        for (Expression exp:exps) {
+            Order desc = cb.desc(exp);
+            whereStructure.addOrder(desc);
+        }
+    }
+    
     public Where having (Predicate... predicates) {
         CriteriaBuilder cb = jpa.cb();
         WhereStructure whereStructure = this.whereStructure.get();
