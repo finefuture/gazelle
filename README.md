@@ -13,7 +13,7 @@
 + 依赖管理工具: Maven3.x版本/Gradle3.1以上版本
 
 ##### [最新版本OSS下载](https://oss.sonatype.org/#nexus-search;quick~io.github.finefuture)
-##### [最新版本Maven中央仓库下载](http://search.maven.org/#search%7Cga%7C1%7Cio.github%2Cfinefuture%20gazelle)
+##### [最新版本Maven中央仓库下载](http://search.maven.org/#search%7Cga%7C1%7Cio.github.finefuture%20gazelle)
 ##### Maven依赖:
 ```xml
 <dependency>
