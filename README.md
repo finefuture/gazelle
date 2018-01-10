@@ -6,6 +6,22 @@
 
 **gazelle** 是一个小巧而轻便的JPA组件，因此命名为gazelle，意为小羚羊。它是基于hibernate提供的JPA2.1规范的，因此只要是实现了JPA2.1规范的框架（例如4.3版本以上的hibernate）都可以无缝切换底层实现。它同时也提供了方便的链式调用以及可植入式的where条件过滤.
 
+#### 快速入门:
+
+##### 工程依赖:
++ JDK1.7或更高版本
++ 依赖管理工具: Maven3.x版本/Gradle3.1以上版本
+
+##### [最新版本OSS下载](https://oss.sonatype.org/#nexus-search;quick~io.github.finefuture)
+##### [最新版本Maven中央仓库下载](http://search.maven.org/#search%7Cga%7C1%7Cio.github%2Cfinefuture%20gazelle)
+##### Maven依赖:
+```xml
+<dependency>
+    <groupId>io.github.finefuture</groupId>
+    <artifactId>gazelle</artifactId>
+    <version>1.0</version>
+</dependency>
+```
 
 ### 使用简介 ###
 
@@ -127,8 +143,7 @@ public class RecoveryAspect {
     }
 }
 ```
-### 依赖 ###
-项目中附带了一个jar包，暂时导入使用，现在正上传到maven中央仓库，以后可直接在项目中添加maven依赖
+##### [示例代码](https://github.com/finefuture/gazelle-example)
 
 #### 其他
 - qq交流群: 634217275
