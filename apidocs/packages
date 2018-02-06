@@ -1,7 +1,0 @@
-org.gra4j.gazelle.chain
-org.gra4j.gazelle.core
-org.gra4j.gazelle.expression
-org.gra4j.gazelle.modify
-org.gra4j.gazelle.query
-org.gra4j.gazelle.structure
-org.gra4j.gazelle.util

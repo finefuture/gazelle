@@ -1,6 +1,6 @@
 package org.gra4j.gazelle.structure;
 
-import org.gra4j.gazelle.core.Jpa;
+import org.gra4j.gazelle.JPAQuery.core.Jpa;
 
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
@@ -38,7 +38,7 @@ public class WhereStructure implements Serializable {
         predicate_h = jpa.cb().conjunction();
         offset = Boolean.TRUE;
         page = new int[2];
-        page[1] = -1;
+        page[1] = Integer.MAX_VALUE;
     }
 
     public List<Predicate> getRestrictions() {
@@ -124,23 +124,26 @@ public class WhereStructure implements Serializable {
 
         WhereStructure that = (WhereStructure) o;
 
-        if (!getRestrictions().equals(that.getRestrictions())) return false;
-        if (!getOrder().equals(that.getOrder())) return false;
-        if (!getGroupBy().equals(that.getGroupBy())) return false;
-        if (!getPredicate().equals(that.getPredicate())) return false;
-        if (!getPredicate_h().equals(that.getPredicate_h())) return false;
-        if (!getOffset().equals(that.getOffset())) return false;
+        if (getRestrictions() != null ? !getRestrictions().equals(that.getRestrictions()) : that.getRestrictions() != null)
+            return false;
+        if (getOrder() != null ? !getOrder().equals(that.getOrder()) : that.getOrder() != null) return false;
+        if (getGroupBy() != null ? !getGroupBy().equals(that.getGroupBy()) : that.getGroupBy() != null) return false;
+        if (getPredicate() != null ? !getPredicate().equals(that.getPredicate()) : that.getPredicate() != null)
+            return false;
+        if (getPredicate_h() != null ? !getPredicate_h().equals(that.getPredicate_h()) : that.getPredicate_h() != null)
+            return false;
+        if (getOffset() != null ? !getOffset().equals(that.getOffset()) : that.getOffset() != null) return false;
         return Arrays.equals(getPage(), that.getPage());
     }
 
     @Override
     public int hashCode() {
-        int result = getRestrictions().hashCode();
-        result = 31 * result + getOrder().hashCode();
-        result = 31 * result + getGroupBy().hashCode();
-        result = 31 * result + getPredicate().hashCode();
-        result = 31 * result + getPredicate_h().hashCode();
-        result = 31 * result + getOffset().hashCode();
+        int result = getRestrictions() != null ? getRestrictions().hashCode() : 0;
+        result = 31 * result + (getOrder() != null ? getOrder().hashCode() : 0);
+        result = 31 * result + (getGroupBy() != null ? getGroupBy().hashCode() : 0);
+        result = 31 * result + (getPredicate() != null ? getPredicate().hashCode() : 0);
+        result = 31 * result + (getPredicate_h() != null ? getPredicate_h().hashCode() : 0);
+        result = 31 * result + (getOffset() != null ? getOffset().hashCode() : 0);
         result = 31 * result + Arrays.hashCode(getPage());
         return result;
     }

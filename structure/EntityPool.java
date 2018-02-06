@@ -31,7 +31,7 @@ public abstract class EntityPool implements Serializable {
             }
             CheckChain checker = check.get();
             checker.check(checker, fields);
-            entityFields.put(targetClass, fields);
+            entityFields.putIfAbsent(targetClass, fields);
         }
         return fields;
     }

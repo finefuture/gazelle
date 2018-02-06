@@ -18,7 +18,7 @@ public abstract class CheckerPool implements Serializable {
         Object checker = pool.get(targetClass);
         if (null==checker) {
             checker = targetClass.newInstance();
-            pool.put(targetClass, checker);
+            pool.putIfAbsent(targetClass, checker);
         }
         return checker;
     }

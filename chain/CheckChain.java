@@ -4,9 +4,9 @@ import org.gra4j.gazelle.structure.CheckChainMap;
 import org.gra4j.gazelle.structure.CheckerPool;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
+
+import static org.gra4j.gazelle.util.AsmUtil.fastInvoke;
 
 /**
  * gazelle
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class CheckChain implements Check,Serializable {
 
-    private CheckChainMap<Method, Object> chain = new CheckChainMap<>();
+    private CheckChainMap<String, Object> chain = new CheckChainMap<>();
 
     private int index = 0;
 
@@ -29,8 +29,12 @@ public class CheckChain implements Check,Serializable {
     }
 
     public void addChecker (String methodName, Class targetClass) {
+        if (targetClass==this.getClass()) {
+            addChecker(methodName, this);
+            return;
+        }
         try {
-            addChecker(method(methodName, targetClass, Object.class), CheckerPool.getIfExist(targetClass));
+            addChecker(methodName, CheckerPool.getIfExist(targetClass));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -38,8 +42,8 @@ public class CheckChain implements Check,Serializable {
         }
     }
 
-    public void addChecker (Method method, Object obj) {
-        chain.put(method, obj);
+    public void addChecker (String methodName, Object obj) {
+        chain.put(methodName, obj);
     }
 
     @Override
@@ -48,8 +52,8 @@ public class CheckChain implements Check,Serializable {
             index = 0;
             return true;
         }
-        Map.Entry<Method, Object> check = chain.getForIndex(index++);
-        boolean checkResult = (boolean) invoke(check.getKey(), check.getValue(), value);
+        Map.Entry<String, Object> check = chain.getForIndex(index++);
+        boolean checkResult = (boolean) fastInvoke(check.getValue(), check.getKey(), new Class[]{Object.class}, value);
         if (checkResult) {
             index = 0;
             return false;
@@ -65,28 +69,6 @@ public class CheckChain implements Check,Serializable {
         return "".equals(value) ? true:false;
     }
 
-    public Method method (String methodName, Class targetClass, Class<?>... parameterTypes) {
-        Method method = null;
-        try {
-            method = targetClass.getDeclaredMethod(methodName, parameterTypes);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return method;
-    }
-
-    public Object invoke (Method method, Object obj, Object value) {
-        Object invoke = null;
-        try {
-            invoke = method.invoke(obj, value);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return invoke;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,12 +77,12 @@ public class CheckChain implements Check,Serializable {
         CheckChain that = (CheckChain) o;
 
         if (index != that.index) return false;
-        return chain.equals(that.chain);
+        return chain != null ? chain.equals(that.chain) : that.chain == null;
     }
 
     @Override
     public int hashCode() {
-        int result = chain.hashCode();
+        int result = chain != null ? chain.hashCode() : 0;
         result = 31 * result + index;
         return result;
     }

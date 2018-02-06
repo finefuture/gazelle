@@ -14,4 +14,11 @@ public class Checker {
         }
     }
 
+    public static boolean isBlank (Object object) {
+        if (object == null || "".equals(object)) {
+            return true;
+        }
+        return false;
+    }
+
 }

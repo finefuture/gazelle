@@ -73,16 +73,17 @@ public class SpecStructure implements Serializable {
 
         SpecStructure that = (SpecStructure) o;
 
-        if (!getExpressions().equals(that.getExpressions())) return false;
-        if (!getGroupBy().equals(that.getGroupBy())) return false;
-        return getAlias().equals(that.getAlias());
+        if (getExpressions() != null ? !getExpressions().equals(that.getExpressions()) : that.getExpressions() != null)
+            return false;
+        if (getGroupBy() != null ? !getGroupBy().equals(that.getGroupBy()) : that.getGroupBy() != null) return false;
+        return getAlias() != null ? getAlias().equals(that.getAlias()) : that.getAlias() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getExpressions().hashCode();
-        result = 31 * result + getGroupBy().hashCode();
-        result = 31 * result + getAlias().hashCode();
+        int result = getExpressions() != null ? getExpressions().hashCode() : 0;
+        result = 31 * result + (getGroupBy() != null ? getGroupBy().hashCode() : 0);
+        result = 31 * result + (getAlias() != null ? getAlias().hashCode() : 0);
         return result;
     }
 

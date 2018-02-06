@@ -1,7 +1,6 @@
 package org.gra4j.gazelle.expression;
 
-import org.gra4j.gazelle.core.Jpa;
-
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import java.util.List;
@@ -14,129 +13,129 @@ import java.util.List;
  */
 public abstract class CommonCriteriaExpression {
 
-    private Jpa jpa;
+    private CriteriaBuilder cb;
 
-    public CommonCriteriaExpression (Jpa jpa) {
-        this.jpa = jpa;
+    public CommonCriteriaExpression (CriteriaBuilder cb) {
+        this.cb = cb;
     }
 
     public Expression prod (Expression exp1, Expression exp2) {
-        return jpa.cb().prod(exp1, exp2);
+        return cb.prod(exp1, exp2);
     }
 
     public Expression mod (Expression exp1, Expression exp2) {
-        return jpa.cb().mod(exp1, exp2);
+        return cb.mod(exp1, exp2);
     }
 
     public Expression quot (Expression exp1, Expression exp2) {
-        return jpa.cb().quot(exp1, exp2);
+        return cb.quot(exp1, exp2);
     }
 
     public Expression diff (Expression exp1, Expression exp2) {
-        return jpa.cb().diff(exp1, exp2);
+        return cb.diff(exp1, exp2);
     }
 
     public Expression count (Expression exp) {
-        return jpa.cb().count(exp);
+        return cb.count(exp);
     }
 
     public Expression sum (Expression exp) {
-        return jpa.cb().sum(exp);
+        return cb.sum(exp);
     }
 
     public Expression avg (Expression exp) {
-        return jpa.cb().avg(exp);
+        return cb.avg(exp);
     }
 
     public Expression max (Expression exp) {
-        return jpa.cb().max(exp);
+        return cb.max(exp);
     }
 
     public Expression min (Expression exp) {
-        return jpa.cb().min(exp);
+        return cb.min(exp);
     }
 
-    public Predicate between_ (Expression exp, Comparable val1, Comparable val2) {
-        return jpa.cb().between(exp, val1, val2);
+    public Predicate between (Expression exp, Comparable val1, Comparable val2) {
+        return cb.between(exp, val1, val2);
     }
 
-    public Predicate between_ (Expression exp1, Expression exp2, Expression exp3) {
-        return jpa.cb().between(exp1, exp2, exp3);
+    public Predicate between (Expression exp1, Expression exp2, Expression exp3) {
+        return cb.between(exp1, exp2, exp3);
     }
 
-    public Predicate isNotNull_ (Expression exp) {
-        return jpa.cb().isNotNull(exp);
+    public Predicate isNotNull (Expression exp) {
+        return cb.isNotNull(exp);
     }
 
-    public Predicate isNull_ (Expression exp) {
-        return jpa.cb().isNull(exp);
+    public Predicate isNull (Expression exp) {
+        return cb.isNull(exp);
     }
 
-    public Predicate notLike_ (Expression exp, String val) {
-        return jpa.cb().notLike(exp, val);
+    public Predicate notLike (Expression exp, String val) {
+        return cb.notLike(exp, val);
     }
 
-    public Predicate like_ (Expression exp, String val) {
-        return jpa.cb().like(exp, val);
+    public Predicate like (Expression exp, String val) {
+        return cb.like(exp, val);
     }
 
-    public Predicate le_ (Expression exp, Comparable val) {
-        return jpa.cb().lessThanOrEqualTo(exp, val);
+    public Predicate le (Expression exp, Comparable val) {
+        return cb.lessThanOrEqualTo(exp, val);
     }
 
-    public Predicate le_ (Expression exp1, Expression exp2) {
-        return jpa.cb().lessThanOrEqualTo(exp1, exp2);
+    public Predicate le (Expression exp1, Expression exp2) {
+        return cb.lessThanOrEqualTo(exp1, exp2);
     }
 
-    public Predicate ge_ (Expression exp, Comparable val) {
-        return jpa.cb().greaterThanOrEqualTo(exp, val);
+    public Predicate ge (Expression exp, Comparable val) {
+        return cb.greaterThanOrEqualTo(exp, val);
     }
 
-    public Predicate ge_ (Expression exp1, Expression exp2) {
-        return jpa.cb().greaterThanOrEqualTo(exp1, exp2);
+    public Predicate ge (Expression exp1, Expression exp2) {
+        return cb.greaterThanOrEqualTo(exp1, exp2);
     }
 
-    public Predicate lt_ (Expression exp, Comparable val) {
-        return jpa.cb().lessThan(exp, val);
+    public Predicate lt (Expression exp, Comparable val) {
+        return cb.lessThan(exp, val);
     }
 
-    public Predicate lt_ (Expression exp1, Expression exp2) {
-        return jpa.cb().lessThan(exp1, exp2);
+    public Predicate lt (Expression exp1, Expression exp2) {
+        return cb.lessThan(exp1, exp2);
     }
 
-    public Predicate gt_ (Expression exp, Comparable val) {
-        return jpa.cb().greaterThan(exp, val);
+    public Predicate gt (Expression exp, Comparable val) {
+        return cb.greaterThan(exp, val);
     }
 
-    public Predicate gt_ (Expression exp1, Expression exp2) {
-        return jpa.cb().greaterThan(exp1, exp2);
+    public Predicate gt (Expression exp1, Expression exp2) {
+        return cb.greaterThan(exp1, exp2);
     }
 
-    public Predicate ne_ (Expression exp, Object val) {
-        return jpa.cb().notEqual(exp, val);
+    public Predicate ne (Expression exp, Object val) {
+        return cb.notEqual(exp, val);
     }
 
-    public Predicate ne_ (Expression exp1, Expression exp2) {
-        return jpa.cb().notEqual(exp1, exp2);
+    public Predicate ne (Expression exp1, Expression exp2) {
+        return cb.notEqual(exp1, exp2);
     }
 
-    public Predicate eq_ (Expression exp, Object val) {
-        return jpa.cb().equal(exp, val);
+    public Predicate eq (Expression exp, Object val) {
+        return cb.equal(exp, val);
     }
 
-    public Predicate eq_ (Expression exp1, Expression exp2) {
-        return jpa.cb().equal(exp1, exp2);
+    public Predicate eq (Expression exp1, Expression exp2) {
+        return cb.equal(exp1, exp2);
     }
 
-    public Predicate isEmpty_ (Expression exp) {
-        return jpa.cb().isEmpty(exp);
+    public Predicate isEmpty (Expression exp) {
+        return cb.isEmpty(exp);
     }
 
-    public Predicate isNotEmpty_ (Expression exp) {
-        return jpa.cb().isNotEmpty(exp);
+    public Predicate isNotEmpty (Expression exp) {
+        return cb.isNotEmpty(exp);
     }
 
-    public Predicate in_ (Expression exp, List vals) {
+    public Predicate in (Expression exp, List vals) {
         return exp.in(vals);
     }
 }

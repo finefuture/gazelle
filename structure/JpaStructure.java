@@ -1,6 +1,6 @@
 package org.gra4j.gazelle.structure;
 
-import org.gra4j.gazelle.core.Operation;
+import org.gra4j.gazelle.JPAQuery.core.Operation;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
@@ -106,22 +106,22 @@ public class JpaStructure implements Serializable {
 
         JpaStructure that = (JpaStructure) o;
 
-        if (!getCb().equals(that.getCb())) return false;
-        if (!getRoot().equals(that.getRoot())) return false;
-        if (!getQuery().equals(that.getQuery())) return false;
-        if (!getUpdate().equals(that.getUpdate())) return false;
-        if (!getDelete().equals(that.getDelete())) return false;
-        return getIsAggregated().equals(that.getIsAggregated());
+        if (getCb() != null ? !getCb().equals(that.getCb()) : that.getCb() != null) return false;
+        if (getRoot() != null ? !getRoot().equals(that.getRoot()) : that.getRoot() != null) return false;
+        if (getQuery() != null ? !getQuery().equals(that.getQuery()) : that.getQuery() != null) return false;
+        if (getUpdate() != null ? !getUpdate().equals(that.getUpdate()) : that.getUpdate() != null) return false;
+        if (getDelete() != null ? !getDelete().equals(that.getDelete()) : that.getDelete() != null) return false;
+        return getIsAggregated() != null ? getIsAggregated().equals(that.getIsAggregated()) : that.getIsAggregated() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getCb().hashCode();
-        result = 31 * result + getRoot().hashCode();
-        result = 31 * result + getQuery().hashCode();
-        result = 31 * result + getUpdate().hashCode();
-        result = 31 * result + getDelete().hashCode();
-        result = 31 * result + getIsAggregated().hashCode();
+        int result = getCb() != null ? getCb().hashCode() : 0;
+        result = 31 * result + (getRoot() != null ? getRoot().hashCode() : 0);
+        result = 31 * result + (getQuery() != null ? getQuery().hashCode() : 0);
+        result = 31 * result + (getUpdate() != null ? getUpdate().hashCode() : 0);
+        result = 31 * result + (getDelete() != null ? getDelete().hashCode() : 0);
+        result = 31 * result + (getIsAggregated() != null ? getIsAggregated().hashCode() : 0);
         return result;
     }
 
