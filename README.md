@@ -25,7 +25,7 @@
 
 ### 使用简介 ###
 
-###### 第一步. 咱们先配置gazelle（其实还有一步，先配置EntityManager,haha,最后面的示例项目链接里面有QAQ）:
+##### 第一步. 咱们先配置gazelle（其实还有一步，先配置EntityManager,haha,最后面的示例项目链接里面有QAQ）:
 
 ```java
 
@@ -46,8 +46,8 @@ public class GazelleConfiguration {
 }
 ```
 
-###### 第二步. 其实咱有两种方式运用gazelle 0.0，比如:
-####### 第一种，使用dao层接口的方式(还有@TupleQuery、@Delete、@Update啊之类大家自己发掘啊，嘤嘤嘤)：
+##### 第二步. 其实咱有两种方式运用gazelle 0.0，比如:
+###### 第一种，使用dao层接口的方式(还有@TupleQuery、@Delete、@Update啊之类大家自己发掘啊，嘤嘤嘤)：
 
 ```java
 
@@ -68,7 +68,7 @@ public interface ShopRepository extends GazelleRepository<Shop, String> {
 }
 ```
 
-########第二种，使用GazelleQuery（这里面也有很多功能哇~）：
+####### 第二种，使用GazelleQuery（这里面也有很多功能哇~）：
 
 ```java
 
@@ -83,7 +83,7 @@ public List<Shop> find () {
     }
 ```
 
-#####额，好像没了，其实不足的地方还有很多，多多提意见吧（虽然我不不一定能解决QAQ），那就这样吧，下面是示例代码，哈哈
+##### 额，好像没了，其实不足的地方还有很多，多多提意见吧（虽然我不一定能解决QAQ），那就这样吧，下面是示例代码，哈哈
 
 ##### [示例代码](https://github.com/finefuture/gazelle-example)
 
