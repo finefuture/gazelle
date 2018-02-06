@@ -4,7 +4,7 @@
 
 **JPA** JPA(Java Persistence API)是Sun官方提出的Java持久化规范。它为Java开发人员提供了一种对象/关系映射工具来管理Java应用中的关系数据。
 
-**gazelle** 是一个小巧而轻便的JPA组件，因此命名为gazelle，意为小羚羊。它是基于hibernate提供的JPA2.1规范的，因此只要是实现了JPA2.1规范的框架（例如4.3版本以上的hibernate）都可以无缝切换底层实现。它同时也提供了方便的链式调用以及可植入式的where条件过滤.
+**gazelle** 是一款类似于Spring data jpa的组件（哈哈，以后简历上应该可以写熟练Spring data jpa了），但是它提供了比Spring data jpa更多的功能（下面例子里会说一些，但是还有更多的功能希望读者自己发掘，哈哈）。它是基于hibernate提供的JPA2.1规范的。
 
 #### 快速入门:
 
@@ -19,130 +19,72 @@
 <dependency>
     <groupId>io.github.finefuture</groupId>
     <artifactId>gazelle</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
 </dependency>
 ```
 
 ### 使用简介 ###
 
-###### 1. 注册gazelle所需组件到spring:
+###### 第一步. 咱们先配置gazelle（其实还有一步，先配置EntityManager,haha,最后面的示例项目链接里面有QAQ）:
 
 ```java
 
 @Configuration
+@EnableGazelleRepository(basePackages = "org.gra4j.gazelleExample.crud.dao.jpa")
 public class GazelleConfiguration {
 
     @PersistenceContext
     EntityManager entityManager;
 
     @Bean
-    public Criterion criterion () {
-        return new Criterion(jpa());
-    }
-
-    @Bean
     public Jpa jpa () {
-        return new Jpa(entityManager);
-    }
-
-    @Bean
-    public Special special () {
-        return new Special(jpa());
-    }
-
-    @Bean
-    public Where where () {
-        return new Where(jpa());
-    }
-
-    @Bean
-    public Recovery recovery () {
-        return new Recovery(jpa(), special(), where());
-    }
-
-    @Bean
-    public Setter setter () {
-        return new Setter(jpa());
+        Jpa jpa = new Jpa(entityManager);
+        JpaContext.setEntityManager(entityManager);
+        return jpa;
     }
 
 }
 ```
 
-###### 2. 创建服务基类:
+###### 第二步. 其实咱有两种方式运用gazelle 0.0，比如:
+####### 第一种，使用dao层接口的方式(还有@TupleQuery、@Delete、@Update啊之类大家自己发掘啊，嘤嘤嘤)：
 
 ```java
 
-@Service
-public class MagicService {
+public interface ShopRepository extends GazelleRepository<Shop, String> {
 
-    @Autowired
-    public Criterion criterion;
+    @Query(@Where(and   = @And({@Expression(ops = ExpressionOps.eq,key = "del"),
+                                @Expression(ops = ExpressionOps.eq,key = "shopName")}),
+//                  or    = @Or({@Expression(ops = ExpressionOps.like,key = "id",value = "%BC85"),
+//                               @Expression(ops = ExpressionOps.in)}),
+                  order = @Order(asc = "createTime"),
+                  check = {CheckOps.checkNullValue, CheckOps.checkEmptyValue}))
+    List<Shop> find (@ExpParam Object del, @ExpParam Object shopName,
+                     @PageParam(PageType.first) int first);
 
-    @Autowired
-    public Where where;
-
-    @Autowired
-    public Special special;
-
-    @Autowired
-    public Jpa jpa;
-
-    @Autowired
-    public Setter setter;
+    @SqlQuery(value = "select * from shop where del=:del order by create_time limit 10", isNative = true, result = Shop.class)
+    List<Shop> find (@ExpParam("del") Integer del);
 
 }
 ```
 
-###### 3. 具体服务类:
+########第二种，使用GazelleQuery（这里面也有很多功能哇~）：
 
 ```java
 
-@Service
-public class ShopService extends MagicService{
+public List<Shop> find () {
 
-    public List<Map<String, Object>> get (boolean auditStatus, String shopName, int first, int max) {
-        jpa.register(Shop.class, Operation.tupleQuery)
-                .aggregate();
-        special.init()
-                .sum("del", "li")
-                .all();
-        where.init()
-                .checkNullValue()//默认两个过滤条件（checkNullValue和checkEmptyValue）
-                .addChecker("methodName", Checker.class)//植入where条件过滤
-		.and()
-                .eq("auditStatus", auditStatus)
-                .eq("shopName", shopName)
-		.or()
-		.like("id", "%BC85")
-                .asc("createTime", "updateTime")
-                .desc("del","logo")
-                .first(first)
-                .max(max);
-        return criterion.findSpecToList(special, where);//推荐使用findSpec(special,where)返回Tuple元组
+        Shop one = (Shop) GazelleQuery.basic(Shop.class).findOne("5BD0E7D5-CE2A-4A8A-9261-363BFD928FBD");
+        System.out.println(one);
+        return GazelleQuery.query().nativeQuery("select * from Shop limit 10", Shop.class);
+//        return GazelleQuery.basic(Shop.class).findAll();
+//        Shop save = (Shop) GazelleQuery.basic(Shop.class).save(new Shop());
+//        return GazelleQuery.select(Shop.class).list();
     }
-}
 ```
 
-###### 4. 手动回收ThreadLocal存放的数据:
+#####额，好像没了，其实不足的地方还有很多，多多提意见吧（虽然我不不一定能解决QAQ），那就这样吧，下面是示例代码，哈哈
 
-```java
-
-@Aspect
-@Component
-public class RecoveryAspect {
-
-    @Autowired
-    private Recovery recovery;
-
-    @Pointcut("execution(* org.gra4j.SimpleJpa.service..*.*(..))")
-    public void point () {}
-
-    @After("point()")
-    public void after () {
-        recovery.recover();
-    }
-}
-```
 ##### [示例代码](https://github.com/finefuture/gazelle-example)
 
 #### 其他
