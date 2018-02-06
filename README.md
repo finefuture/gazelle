@@ -68,7 +68,7 @@ public interface ShopRepository extends GazelleRepository<Shop, String> {
 }
 ```
 
-####### 第二种，使用GazelleQuery（这里面也有很多功能哇~）：
+###### 第二种，使用GazelleQuery（这里面也有很多功能哇~）：
 
 ```java
 
