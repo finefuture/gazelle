@@ -32,9 +32,9 @@ public class QuerySupport extends JpaQuerySupport {
         cq.having(toHaving(args));
         javax.persistence.Query query = em.createQuery(cq);
 
-        toPage(args);
-        return query.setFirstResult(pageInfo[0])
-                    .setMaxResults(pageInfo[1])
+        int[] page = toPage(args);
+        return query.setFirstResult(page[0])
+                    .setMaxResults(page[1])
                     .getResultList();
     }
 

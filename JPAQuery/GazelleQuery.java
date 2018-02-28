@@ -30,15 +30,15 @@ public class GazelleQuery {
     }
 
     public static UpdateBuilder update (Class clazz) {
-        return new UpdateBuilder(em, clazz);
+        return JpaProxy.createProxy(UpdateBuilder.class, new Class[]{EntityManager.class, Class.class}, new Object[]{em, clazz});
     }
 
     public static DeleteBuilder delete (Class clazz) {
-        return new DeleteBuilder(em, clazz);
+        return JpaProxy.createProxy(DeleteBuilder.class, new Class[]{EntityManager.class, Class.class}, new Object[]{em, clazz});
     }
 
     public static <T, ID extends Serializable> BasicOperation basic (Class<T> clazz) {
-        return new BasicOperation<T, ID>(em, clazz);
+        return JpaProxy.createProxy(BasicOperation.class, new Class[]{EntityManager.class, Class.class}, new Object[]{em, clazz});
     }
 
     public static AbstractSqlQuery query () {
@@ -46,7 +46,7 @@ public class GazelleQuery {
     }
 
     public static AbstractModify modify () {
-        return new AbstractModify(em);
+        return JpaProxy.createProxy(AbstractModify.class, new Class[]{EntityManager.class}, new Object[]{em});
     }
 
 }

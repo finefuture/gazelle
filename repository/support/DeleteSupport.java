@@ -2,8 +2,10 @@ package org.gra4j.gazelle.repository.support;
 
 import org.gra4j.gazelle.JPAQuery.core.Operation;
 import org.gra4j.gazelle.repository.Enum.KeyType;
+import org.gra4j.gazelle.repository.JpaContext;
 import org.gra4j.gazelle.repository.annotation.core.Delete;
 import org.gra4j.gazelle.repository.model.ParamInfo;
+import org.gra4j.gazelle.transaction.TransactionManager;
 
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaDelete;
@@ -24,10 +26,20 @@ public class DeleteSupport extends JpaRepositorySupport {
 
     @Override
     public Object execute(Object[] args) throws InvocationTargetException, IllegalAccessException {
-        CriteriaDelete delete = jpaStructure.getDelete();
+        TransactionManager tx = JpaContext.getTransactionManager();
+        int change;
+        tx.begin();
+        try {
+            CriteriaDelete delete = jpaStructure.getDelete();
 
-        delete.where(toPredicate(args, KeyType.and, KeyType.or));
-        Query query = em.createQuery(delete);
-        return query.executeUpdate();
+            delete.where(toPredicate(args, KeyType.and, KeyType.or));
+            Query query = em.createQuery(delete);
+            change = query.executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            throw e;
+        }
+        return change;
     }
 }

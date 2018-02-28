@@ -2,6 +2,8 @@ package org.gra4j.gazelle.repository.register;
 
 import org.gra4j.gazelle.repository.JpaContext;
 import org.gra4j.gazelle.repository.model.RepositoryMetadata;
+import org.gra4j.gazelle.transaction.ProxyTransactional;
+import org.gra4j.gazelle.transaction.Transactional;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 
@@ -35,6 +37,9 @@ public class RepositoryProxy {
             if (dataAccessMethods.contains(method)) {
                 DataAccessMethod dataAccessMethod = cachedDataAccessMethod(method, entityType);
                 return dataAccessMethod.execute(args);
+            }
+            if (method.isAnnotationPresent(Transactional.class)) {
+                return new ProxyTransactional(JpaContext.getTransactionManager()).doTransaction(methodProxy, o, args);
             }
             return methodProxy.invokeSuper(o, args);
         });

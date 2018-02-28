@@ -1,6 +1,6 @@
 package org.gra4j.gazelle.JPAQuery;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.gra4j.gazelle.transaction.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -76,6 +76,7 @@ public class BasicOperation<T, ID extends Serializable> {
         return entity;
     }
 
+    @Transactional
     public T updateAndFlush (T entity) {
         notNull(entity, ENTITY_NOTNULL);
         em.merge(entity);
@@ -97,6 +98,7 @@ public class BasicOperation<T, ID extends Serializable> {
         em.remove(em.contains(entity) ? entity : em.merge(entity));
     }
 
+    @Transactional
     public int deleteAll () {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaDelete delete = cb.createCriteriaDelete(clazz);

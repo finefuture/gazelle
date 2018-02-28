@@ -1,6 +1,6 @@
 package org.gra4j.gazelle.JPAQuery.sql;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.gra4j.gazelle.transaction.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

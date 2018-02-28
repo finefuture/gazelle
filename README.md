@@ -6,6 +6,20 @@
 
 **gazelle** 是一款类似于Spring data jpa的组件（哈哈，以后简历上应该可以写熟练Spring data jpa了），但是它提供了比Spring data jpa更多的功能（下面例子里会说一些，但是还有更多的功能希望读者自己发掘，哈哈）。它是基于hibernate提供的JPA2.1规范的。
 
+**gazelle提供了事务管理功能，一种是Jpa原生的TransactionManager，一种是植入的springTransactionManager**
+**事务测试**
+```java
+	@Transactional(rollbackFor = Exception.class)
+    public void testTX () {
+        shopRepository.delete("014A7A16-2297-474D-B3C4-D8F9B9E976A3");
+        shopRepository.delete("1111111111111");//这里会报错，将回滚
+        GazelleQuery.update(Shop.class)
+                    .setter().set("shopName", "XXX").build()
+                    .where().eq("id", "35847C13-40DE-4885-8FBE-2C1DD39F7860").build()
+                    .execute();
+    }
+```
+
 #### 快速入门:
 
 ##### 工程依赖:
@@ -19,7 +33,7 @@
 <dependency>
     <groupId>io.github.finefuture</groupId>
     <artifactId>gazelle</artifactId>
-    <version>2.0</version>
+    <version>2.1</version>
 </dependency>
 ```
 
@@ -36,10 +50,16 @@ public class GazelleConfiguration {
     @PersistenceContext
     EntityManager entityManager;
 
+	@Autowired
+    PlatformTransactionManager tx;
+
     @Bean
+	@PostConstruct
     public Jpa jpa () {
         Jpa jpa = new Jpa(entityManager);
         JpaContext.setEntityManager(entityManager);
+		JpaContext.setTransactionType(TransactionalType.spring);//TransactionalType.jpa
+		JpaContext.setSpringTransactionManager(tx);
         return jpa;
     }
 
@@ -64,6 +84,9 @@ public interface ShopRepository extends GazelleRepository<Shop, String> {
 
     @SqlQuery(value = "select * from shop where del=:del order by create_time limit 10", isNative = true, result = Shop.class)
     List<Shop> find (@ExpParam("del") Integer del);
+
+	@Update(set = {"shopName"},where = @Where(and = @And(@Expression(ops = ExpressionOps.eq, key="shopName"))))
+    int update(@ExpParam Object shopName, @ModifyParam String name);
 
 }
 ```

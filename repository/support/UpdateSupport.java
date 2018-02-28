@@ -2,8 +2,10 @@ package org.gra4j.gazelle.repository.support;
 
 import org.gra4j.gazelle.JPAQuery.core.Operation;
 import org.gra4j.gazelle.repository.Enum.KeyType;
+import org.gra4j.gazelle.repository.JpaContext;
 import org.gra4j.gazelle.repository.annotation.core.Update;
 import org.gra4j.gazelle.repository.model.ParamInfo;
+import org.gra4j.gazelle.transaction.TransactionManager;
 
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaUpdate;
@@ -31,12 +33,22 @@ public class UpdateSupport extends JpaRepositorySupport {
 
     @Override
     public Object execute(Object[] args) throws InvocationTargetException, IllegalAccessException {
-        CriteriaUpdate update = jpaStructure.getUpdate();
+        TransactionManager tx = JpaContext.getTransactionManager();
+        int change;
+        tx.begin();
+        try {
+            CriteriaUpdate update = jpaStructure.getUpdate();
 
-        toSet(update, args);
-        update.where(toPredicate(args, KeyType.and, KeyType.or));
-        Query query = em.createQuery(update);
-        return query.executeUpdate();
+            toSet(update, args);
+            update.where(toPredicate(args, KeyType.and, KeyType.or));
+            Query query = em.createQuery(update);
+            change = query.executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            throw e;
+        }
+        return change;
     }
 
     private void toSet (CriteriaUpdate update, Object[] args) {

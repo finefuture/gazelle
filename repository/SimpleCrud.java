@@ -1,5 +1,6 @@
 package org.gra4j.gazelle.repository;
 
+import org.gra4j.gazelle.transaction.Transactional;
 import org.gra4j.gazelle.util.Checker;
 
 import javax.persistence.EntityManager;
@@ -57,6 +58,7 @@ public class SimpleCrud<T, ID extends Serializable> implements GazelleRepository
     }
 
     @Override
+    @Transactional
     public T save (T entity) {
         notNull(entity, ENTITY_NOTNULL);
         em.persist(entity);
@@ -64,6 +66,7 @@ public class SimpleCrud<T, ID extends Serializable> implements GazelleRepository
     }
 
     @Override
+    @Transactional
     public T update (T entity) {
         notNull(entity, ENTITY_NOTNULL);
         em.merge(entity);
@@ -71,6 +74,7 @@ public class SimpleCrud<T, ID extends Serializable> implements GazelleRepository
     }
 
     @Override
+    @Transactional
     public T saveAndFlush (T entity) {
         save(entity);
         em.flush();
@@ -78,6 +82,7 @@ public class SimpleCrud<T, ID extends Serializable> implements GazelleRepository
     }
 
     @Override
+    @Transactional
     public T updateAndFlush (T entity) {
         update(entity);
         em.flush();
@@ -85,20 +90,23 @@ public class SimpleCrud<T, ID extends Serializable> implements GazelleRepository
     }
 
     @Override
+    @Transactional
     public void delete (T entity) {
-        Checker.notNull(entity, "The entity must not be null!");
+        Checker.notNull(entity, ENTITY_NOTNULL);
         em.remove(em.contains(entity) ? entity : em.merge(entity));
     }
 
     @Override
+    @Transactional
     public void delete (ID id) {
         notNull(id, ID_NOTNULL);
         T entity = findOne(id);
         notNull(entity, String.format("No %s entity with id %s exists!", entityType, id));
-        delete(entity);
+        em.remove(entity);
     }
 
     @Override
+    @Transactional
     public int deleteAll () {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaDelete delete = cb.createCriteriaDelete(entityType);
@@ -109,6 +117,7 @@ public class SimpleCrud<T, ID extends Serializable> implements GazelleRepository
     }
 
     @Override
+    @Transactional
     public void delete (Iterable<T> entities) {
         notNull(entities, "The given Iterable of entities not be null!");
 

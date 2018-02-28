@@ -13,4 +13,5 @@ org.gra4j.gazelle.repository.model
 org.gra4j.gazelle.repository.register
 org.gra4j.gazelle.repository.support
 org.gra4j.gazelle.structure
+org.gra4j.gazelle.transaction
 org.gra4j.gazelle.util

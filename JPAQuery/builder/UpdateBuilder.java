@@ -1,5 +1,6 @@
 package org.gra4j.gazelle.JPAQuery.builder;
 
+import org.gra4j.gazelle.transaction.Transactional;
 import org.gra4j.gazelle.JPAQuery.core.Operation;
 import org.gra4j.gazelle.JPAQuery.core.Setter;
 
@@ -26,6 +27,7 @@ public class UpdateBuilder extends JPAQueryBuilder {
         return this.setter;
     }
 
+    @Transactional
     public int execute () {
         CriteriaUpdate update = jpa.update();
 

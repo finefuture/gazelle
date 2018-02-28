@@ -3,6 +3,7 @@ package org.gra4j.gazelle.repository.support;
 import org.gra4j.gazelle.repository.JpaContext;
 import org.gra4j.gazelle.repository.annotation.core.SqlQuery;
 import org.gra4j.gazelle.repository.model.ParamInfo;
+import org.gra4j.gazelle.transaction.TransactionManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -41,20 +42,35 @@ public class SqlQuerySupport implements RepositorySupport {
 
     @Override
     public Object execute(Object[] args) {
+        return modify ? modify(args):query(args);
+    }
+
+    private Object query (Object[] args) {
         Query query = toMappingQuery();
 
         setParameter(query, args);
-        if (modify)
-            return query.executeUpdate();
         return query.getResultList();
     }
 
+    private Object modify (Object[] args) {
+        TransactionManager tx = JpaContext.getTransactionManager();
+        int change;
+        tx.begin();
+        try {
+            Query query = toMappingQuery();
+
+            setParameter(query, args);
+            change = query.executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            throw e;
+        }
+        return change;
+    }
+
     private Query toMappingQuery () {
-        if (isNamed)
-            return em.createNamedQuery(value, resultClass);
-        else if (isNative)
-            return em.createNativeQuery(value, resultClass);
-        return em.createQuery(value, resultClass);
+        return isNamed?em.createNamedQuery(value, resultClass):(isNative?em.createNativeQuery(value, resultClass):em.createQuery(value, resultClass));
     }
 
     private void setParameter (Query query, Object[] args) {

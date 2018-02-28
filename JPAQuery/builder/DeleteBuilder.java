@@ -1,5 +1,6 @@
 package org.gra4j.gazelle.JPAQuery.builder;
 
+import org.gra4j.gazelle.transaction.Transactional;
 import org.gra4j.gazelle.JPAQuery.core.Operation;
 
 import javax.persistence.EntityManager;
@@ -18,6 +19,7 @@ public class DeleteBuilder extends JPAQueryBuilder {
         super(em, clazz, Operation.delete);
     }
 
+    @Transactional
     public int execute () {
         CriteriaDelete delete = jpa.delete();
 
