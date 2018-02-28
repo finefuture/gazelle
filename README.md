@@ -4,7 +4,7 @@
 
 **JPA** JPA(Java Persistence API)是Sun官方提出的Java持久化规范。它为Java开发人员提供了一种对象/关系映射工具来管理Java应用中的关系数据。
 
-**gazelle** 是一款类似于Spring data jpa的组件（哈哈，以后简历上应该可以写熟练Spring data jpa了），但是它提供了比Spring data jpa更多的功能（下面例子里会说一些，但是还有更多的功能希望读者自己发掘，哈哈）。它是基于hibernate提供的JPA2.1规范的。
+**gazelle** 是一款类似于Spring data jpa的组件，但是它提供了比Spring data jpa更多的功能。它是基于hibernate提供的JPA2.1规范的。
 
 **gazelle提供了事务管理功能，一种是Jpa原生的TransactionManager，一种是植入的springTransactionManager**
 **事务测试**
@@ -39,7 +39,7 @@
 
 ### 使用简介 ###
 
-##### 第一步. 咱们先配置gazelle（其实还有一步，先配置EntityManager,haha,最后面的示例项目链接里面有QAQ）:
+##### 第一步. 咱们先配置gazelle（其实还有一步，先配置EntityManager,最后面的示例项目链接里面有）:
 
 ```java
 
@@ -50,7 +50,7 @@ public class GazelleConfiguration {
     @PersistenceContext
     EntityManager entityManager;
 
-	@Autowired
+    @Autowired
     PlatformTransactionManager tx;
 
     @Bean
@@ -67,7 +67,7 @@ public class GazelleConfiguration {
 ```
 
 ##### 第二步. 其实咱有两种方式运用gazelle 0.0，比如:
-###### 第一种，使用dao层接口的方式(还有@TupleQuery、@Delete、@Update啊之类大家自己发掘啊，嘤嘤嘤)：
+###### 第一种，使用dao层接口的方式(还有@TupleQuery、@Delete、@Update啊之类大家自己发掘啊)：
 
 ```java
 
@@ -91,7 +91,7 @@ public interface ShopRepository extends GazelleRepository<Shop, String> {
 }
 ```
 
-###### 第二种，使用GazelleQuery（这里面也有很多功能哇~）：
+###### 第二种，使用GazelleQuery（这里面也有很多功能）：
 
 ```java
 
@@ -105,8 +105,6 @@ public List<Shop> find () {
 //        return GazelleQuery.select(Shop.class).list();
     }
 ```
-
-##### 额，好像没了，其实不足的地方还有很多，多多提意见吧（虽然我不一定能解决QAQ），那就这样吧，下面是示例代码，哈哈
 
 ##### [示例代码](https://github.com/finefuture/gazelle-example)
 
