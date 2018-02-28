@@ -9,7 +9,7 @@
 **gazelle提供了事务管理功能，一种是Jpa原生的TransactionManager，一种是植入的springTransactionManager**
 **事务测试**
 ```java
-	@Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void testTX () {
         shopRepository.delete("014A7A16-2297-474D-B3C4-D8F9B9E976A3");
         shopRepository.delete("1111111111111");//这里会报错，将回滚
@@ -54,12 +54,12 @@ public class GazelleConfiguration {
     PlatformTransactionManager tx;
 
     @Bean
-	@PostConstruct
+    @PostConstruct
     public Jpa jpa () {
         Jpa jpa = new Jpa(entityManager);
         JpaContext.setEntityManager(entityManager);
-		JpaContext.setTransactionType(TransactionalType.spring);//TransactionalType.jpa
-		JpaContext.setSpringTransactionManager(tx);
+	JpaContext.setTransactionType(TransactionalType.spring);//TransactionalType.jpa
+	JpaContext.setSpringTransactionManager(tx);
         return jpa;
     }
 
@@ -85,7 +85,7 @@ public interface ShopRepository extends GazelleRepository<Shop, String> {
     @SqlQuery(value = "select * from shop where del=:del order by create_time limit 10", isNative = true, result = Shop.class)
     List<Shop> find (@ExpParam("del") Integer del);
 
-	@Update(set = {"shopName"},where = @Where(and = @And(@Expression(ops = ExpressionOps.eq, key="shopName"))))
+    @Update(set = {"shopName"},where = @Where(and = @And(@Expression(ops = ExpressionOps.eq, key="shopName"))))
     int update(@ExpParam Object shopName, @ModifyParam String name);
 
 }
