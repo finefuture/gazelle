@@ -7,6 +7,7 @@
 **gazelle** 是一款类似于Spring data jpa的组件，但是它提供了比Spring data jpa更多的功能。它是基于hibernate提供的JPA2.1规范的。
 
 **gazelle提供了事务管理功能，一种是Jpa原生的TransactionManager，一种是植入的springTransactionManager**
+
 **事务测试**
 ```java
     @Transactional(rollbackFor = Exception.class)
